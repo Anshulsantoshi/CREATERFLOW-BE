@@ -10,10 +10,16 @@ export class AuthController {
 
 
     @Post('/signup')
-
-    CreateUser(@Body() Data:{email:string , name:string}){
-        return this.authservice.signup(Data.email, Data.name)
+    CreateUser(@Body() Data:{email:string , name:string , password:number}){
+        return this.authservice.signup(Data.email, Data.name , Data.password)
     }
+
+    @Post('/login')
+    loginuser(@Body() Data:{email:string , password:number}){
+        return this.authservice.login(Data.email, Data.password)
+    }
+
+   
 }
 
 

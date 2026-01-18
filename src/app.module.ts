@@ -1,26 +1,36 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
-
+console.log("✅ AUTH MODULE JWT_SECRET =>", process.env.JWT_SECRET);
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      url: 'postgresql://neondb_owner:npg_zSVnyQ50evcP@ep-blue-unit-ahkspb31-pooler.c-3.us-east-1.aws.neon.tech/createrflow?sslmode=require&channel_binding=require',
+    // ✅ .env ko load karta hai
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
 
-      ssl: true,
-      extra: {
-        ssl: {
-          rejectUnauthorized: false,
+    // ✅ TypeORM config .env se read karega
+    TypeOrmModule.forRootAsync({
+      inject: [ConfigService],
+      useFactory: (config: ConfigService) => ({
+        type: 'postgres',
+        url:  process.env.DATABASE_URL,
+
+        ssl: true,
+        extra: {
+          ssl: {
+            rejectUnauthorized: false,
+          },
         },
-      },
 
-      autoLoadEntities: true, // ✅ best option (entities auto pick karega)
-      synchronize: true, // ✅ dev me ok, prod me false
+        autoLoadEntities: true,
+        synchronize: true,
+      }),
     }),
 
     AuthModule,
