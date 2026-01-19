@@ -23,7 +23,7 @@ export class AuthService {
     return await this.userRepo.save(newUser);
   }
 
-  egy
+  
   async login (email:string  , password:number){
 
     const user  = await this.userRepo.findOne({where:{email}});
@@ -42,8 +42,25 @@ export class AuthService {
       access_token: this.jwtservice.sign(payload)
     }
 
-
-
-
   }
-}
+
+
+  async GetProfile(id:number ){
+
+    const profile = await this.userRepo.findOne({where:{id}});
+
+    if(!profile){
+      return "invalid id "
+    }else{
+      return{
+        name:profile.name,
+        email:profile.email
+      }
+        
+    }
+    }
+  }
+
+
+
+

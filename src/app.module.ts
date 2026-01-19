@@ -5,10 +5,17 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
-console.log("✅ AUTH MODULE JWT_SECRET =>", process.env.JWT_SECRET);
+import { MediaModule } from './media/media.module';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 
 @Module({
   imports: [
+
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'uploads'), // Folder ka rasta
+      serveRoot: '/uploads', // Browser mein URL kaisa dikhega (e.g. localhost:3000/uploads/xyz.jpg)
+    }),
     // ✅ .env ko load karta hai
     ConfigModule.forRoot({
       isGlobal: true,
@@ -34,6 +41,8 @@ console.log("✅ AUTH MODULE JWT_SECRET =>", process.env.JWT_SECRET);
     }),
 
     AuthModule,
+
+    MediaModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -18,6 +18,10 @@ export class User {
     password:number
 
 
+    @Column({nullable:true})
+    profilePic:string
+
+
 
 
 }
